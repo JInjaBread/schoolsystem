@@ -1,0 +1,63 @@
+{% extends 'student_template/base_template.html' %}
+
+{% block page_title %}
+    Student Subject
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+  <div class="row">
+    <div class="col">
+      <table class="table table-hover text-nowrap">
+      <thead>
+          <tr>
+            <th>Title</th>
+            <th>Score</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for quiz in quiz_list %}
+          <tr>
+          <td>{{ quiz.quiz_id.name }}</td>
+          <td>{{ quiz.score}}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table table-hover text-nowrap">
+      <thead>
+          <tr>
+            <th>Title</th>
+            <th>Score</th>
+            <th>View Submited File</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for task in task_temp %}
+          <tr>
+          <td>{{ task.task_id.title }}</td>
+          <td>{{ task.score_result }}/{{ task.task_id.max_score }}</td>
+          <td>
+              <a href="{{ task.work_file }}" class="btn btn-success">View</a>
+          </td>
+          </tr>
+          {% endfor %}
+
+      </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+  {% endblock main_content %}
+
+  {% block custom_js %}
+    <script>
+    </script>
+  {% endblock custom_js %}

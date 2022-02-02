@@ -1,0 +1,199 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    {{ subject.subject_name }}
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+<section class="content">
+  {% if messages %}
+  <div class="form-group">
+  <div class="col-12">
+      {% for message in messages %}
+      {% if message.tags == "error" %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% elif message.tags == "success" %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+  </div>
+  {% endif %}
+  <!-- Tab -->
+  <div class="row justify-content-center">
+    <div class="col-sm">
+    </div>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Assign Teacher</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Modules</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Recordings</a>
+      </li>
+    </ul>
+    <div class="col-sm">
+
+    </div>
+
+  </div>
+<div class="tab-content" id="pills-tabContent">
+  <!-- Tab for assigning Teacher to Subject -->
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Assigned Staff</button><br/>&nbsp;
+       <div class="container">
+         <div class="row justify-content-md-center">
+           <div class="col-md">
+             <table class="table table-striped">
+             <thead class="thead-dark">
+               <tr>
+                 <th scope="col">Staff</th>
+                 <th scope="col">Section</th>
+                 <th scope="col">Action</th>
+               </tr>
+             </thead>
+             <tbody>
+                 {% for assign in assign_list %}
+                 <tr>
+                   <th scope="row">{{ assign.staff_id.admin.first_name }} {{ assign.staff_id.admin.last_name }}</th>
+                   <td>{{ assign.section_id.section_name }}</td>
+                   <td>
+                     <a href="" class="btn btn-success"><i class="fas fa-edit"></i></a>
+                     <a href="" class="btn btn-danger"><i class="fas fa-times"></i></a>
+                   </td>
+                 </tr>
+                 {% endfor %}
+             </tbody>
+           </table>
+       </div>
+     </div>
+    </div>
+  </div>
+  <!-- Tab for Customizing Modules -->
+  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#moduleModal">Add Module</button><br/>&nbsp;
+    <div class="container">
+          <div class="row">
+            {% for module in module_list %}
+              <div class="col-md-5">
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <h4>{{module.name}}</h4>
+
+                  <p>{{ module.grading_id.grading_name }}</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-folder"></i>
+                  </div>
+                  <a href="{{ module.module_file }}" class="small-box-footer" target="_blank">Download <i class="fas fa-download"></i></a>
+                </div>
+              </div>
+              {% endfor %}
+        </div>
+    </div>
+  </div>
+  <!--  End of Tab for Customizing Modules -->
+  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+</div>
+
+  <!-- Modal Start  -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Assign Staff</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form role="form" method="POST" action="{% url 'assign_staff_subject' school_year.id subject.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                  <label>Staff</label>
+                  <select class="form-control" name="staff_id">
+                      {% for staff in staffs %}
+                          <option value="{{ staff.id }}">{{ staff.admin.first_name }} {{ staff.admin.last_name }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label>Section</label>
+                  <select class="form-control" name="section_id">
+                      {% for section in sections %}
+                          <option value="{{ section.id }}">{{ section.section_name }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Assign</button>
+            </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="moduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Module</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="dropzone" role="form" method="POST" action="{% url 'add_module_save' school_year.id subject.id %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" name="name">
+                </div>
+                <div class="form-group">
+                    <label>Grading</label>
+                    <select class="form-control" name="grading_id">
+                        {% for grading in grading %}
+                            <option value="{{ grading.id }}">{{ grading.grading_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>File</label>
+                    <input type="file" class="form-control" name="file">
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Upload</button>
+              </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

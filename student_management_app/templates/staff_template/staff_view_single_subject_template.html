@@ -1,0 +1,162 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+    {{ subject_data.subject_name }}
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+<section class="content">
+  {% if messages %}
+  <div class="form-group">
+  <div class="col-12">
+      {% for message in messages %}
+      {% if message.tags == "error" %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% elif message.tags == "success" %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-sm">
+
+    </div>
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Stream</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Modules</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">People</a>
+      </li>
+    </ul>
+    <div class="col-sm">
+
+    </div>
+  </div>
+  <hr>
+
+
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="card" style="height:240px; max-width:1000px;">
+            <div class="card-body" style="background: var(--cyan);color: var(--secondary);  border-radius:8px;">
+              <div style="position:absolute; bottom: 0; margin-bottom: 10px;">
+                <h2 style="color: #ffffff;">{{ subject_data.subject_name }}</h2>
+                <a href="{% url 'room' subject_data.id section_data.id %}"><button class="btn btn-primary" type="button">Start Room</button></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <div class="card">
+            <div class="card-body" style="border-radius:8px;">
+              <h5 class="card-title">Recordings</h5><br />
+              <hr>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="btn btn-primary">See All Recordings</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="card" style="max-width:620px;">
+            <div class="card-body" style="border-radius:8px;">
+              <h5 class="card-title">Make Announcement</h5>&nbsp;<br/>
+              <hr>
+              <div class="form-group">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Post</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+
+        </div>
+        <div class="col-8">
+          <div class="card" style="max-width:620px;">
+            <div class="card-body" style="border-radius:8px;">
+              <h5 class="card-title">Announcement</h5>&nbsp;<br/>
+              <hr>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+    <div class="container">
+            <div class="row">
+              {% for module in module_list %}
+                <div class="col-md-5">
+                  <div class="small-box bg-success">
+                    <div class="inner">
+                      <h4>{{module.name}}</h4>
+
+                    <p>{{ module.grading_id.grading_name }}</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fas fa-folder"></i>
+                    </div>
+                    <a href="{% url 'staff_view_single_modules' subject_data.id module.id %}" class="small-box-footer">View Modules<i class="fas  fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+          </div>
+  </div>
+  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+    <div class="container">
+      <div class="row justify-content-center">
+        <h3>Staff</h3><br />
+        <table class="table">
+          <tr>
+            <td style="border: 0px solid #000000;">{{ staff.admin.first_name }} {{ staff.admin.last_name }}</td>
+          </tr>
+        </table>
+        <br>
+        <h3 class="primary">Students</h3><br />
+        <table class="table">
+          {% for student in students %}
+          <tr>
+            <td style="border: 0px solid #000000;">{{ student.admin.first_name }} {{ student.middle_name }} {{ student.admin.last_name }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <table class="table">
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

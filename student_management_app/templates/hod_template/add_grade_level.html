@@ -1,0 +1,104 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    Grade Level
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+          {% if messages %}
+          <div class="form-group">
+          <div class="col-12">
+              {% for message in messages %}
+              {% if message.tags == "error" %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% elif message.tags == "success" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% endif %}
+              {% endfor %}
+          </div>
+          </div>
+          {% endif %}
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">+ Add Year Level</button><br/>&nbsp
+
+          <div class="row">
+              <div class="col-md-12">
+                  <!-- general form elements -->
+                  <div class="card">
+                      <div class="card-header">
+                          <h3 class="card-title">Grade Level</h3>
+
+                          <div class="card-tools">
+                          <div class="input-group input-group-sm" style="width: 150px;">
+                          </div>
+                          </div>
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="row">
+                        {% for gradelevel in gradelevels %}
+                          <div class="col-md-4">
+                            <div class="small-box text-light bg-secondary">
+                              <div class="inner">
+                                <h3>{{gradelevel.grade_level_name}}</h3>
+
+                                <p><b>Students:</b> {{ gradelevel.student.count }}</p>
+                                <p><b>Subjects:</b> {{ gradelevel.subject.count }}</p>
+                              </div>
+                              <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                              </div>
+                              <a href="{% url 'view_grade_level' school_year.id gradelevel.id %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                          </div>
+                          {% endfor %}
+                          </div>
+                      </div>
+                      <!-- /.card-body -->
+                      </div>
+                  <!-- /.card -->
+
+              </div>
+          </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Grade Level</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form role="form" method="POST" action="{% url 'add_grade_save' school_year.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Grade Level</label>
+                            <input type="text" class="form-control" name="gradelevel">
+                        </div>
+
+                        <button type="submit" style=" float:right;" class="btn btn-primary">Submit</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}

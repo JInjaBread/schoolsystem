@@ -1,0 +1,305 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    Add Student
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" type="button">+ Add Student</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal"> Upload Batch File</button><br/>&nbsp;
+            {% if messages %}
+            <div class="form-group">
+            <div class="col-12">
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                {% elif message.tags == "success" %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            </div>
+            {% endif %}
+          <div class="row">
+
+              <div class="col-md-12">
+                  <!-- general form elements -->
+                  <div class="card">
+                      <div class="card-header">
+                          <h3 class="card-title">Student Details</h3>
+
+                          <div class="card-tools">
+                          <form class="" action="{% url 'add_student' school_year.id %}" method="GET">
+                            {% csrf_token %}
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="search" name="table_search" class="form-control float-right" placeholder="Search">
+
+                                <div class="input-group-append">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                          </form>
+                          </div>
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="card-body table-responsive p-0 ">
+                          <table class="table table-hover text-nowrap table-striped">
+                          <thead class="table-dark">
+                              <tr>
+                              <th>ID</th>
+                              <th>First Name</th>
+                              <th>Middle Name</th>
+                              <th>Last Name</th>
+                              <th>Username</th>
+                              <th>Email</th>
+                              <th>Address</th>
+                              <th>Gender</th>
+                              <th>Grade Level</th>
+                              <th>Section</th>
+                              <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for student in students %}
+                              <tr>
+                              <td>{{ student.id }}</td>
+                              <td>{{ student.admin.first_name }}</td>
+                              <td>{{ student.middle_name }}</td>
+                              <td>{{ student.admin.last_name }}</td>
+                              <td>{{ student.admin.username }}</td>
+                              <td>{{ student.admin.email }}</td>
+                              <td>{{ student.address }}</td>
+                              <td>{{ student.gender }}</td>
+                              <td>{{ student.grade_level_id.grade_level_name }}</td>
+                              <td>{{ student.section_id.section_name }}</td>
+                              <td>
+                                  <a href="" class="btn btn-success"><i class="fas fa-edit"></i></a>
+                                  <a href="{% url 'delete_student' school_year.id student.id %}" class="btn btn-danger"><i class="fas fa-times"></i></a>
+                              </td>
+                              </tr>
+                              {% endfor %}
+
+                          </tbody>
+                          </table>
+                      </div>
+                      <!-- /.card-body -->
+                      </div>
+                  <!-- /.card -->
+
+              </div>
+              <nav>
+                <ul class="pagination justify-content-end">
+                      {% if students.has_previous %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ students.previous_page_number }}"> <i class="fas fa-arrow-left"></i> </a></li>
+                      {% endif %}
+
+                      {% for i in students.paginator.page_range %}
+                        {% if students.number == i %}
+                            <li class="page-item active"> <span class="page-link">{{ i }}<span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                          <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                      {% endfor %}
+
+                      {% if students.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ students.next_page_number }}"> <i class="fas fa-arrow-right"></i> </a></li>
+                      {% endif %}
+              </ul>
+              </nav>
+          </div>
+
+        </div><!-- /.container-fluid -->
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Account For Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form role="form" method="POST" action="{% url 'add_student_save' school_year.id %}">
+                        {% csrf_token %}
+                        <div class="card-body">
+                          <div class="form-group">
+                              <label>Username</label>
+                              <input type="text" class="form-control" name="username" id="id_username">
+                          </div>
+                          <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" name="email" id="id_email">
+                          </div>
+                          <div class="form-group">
+                              <label>First Name</label>
+                              <input type="text" class="form-control" name="first_name">
+                          </div>
+                          <div class="form-group">
+                              <label>Middle Name</label>
+                              <input type="text" class="form-control" name="middle_name">
+                          </div>
+                          <div class="form-group">
+                              <label>Last Name</label>
+                              <input type="text" class="form-control" name="last_name">
+                          </div>
+                          <div class="form-group">
+                              <label>Password</label>
+                              <input type="password" class="form-control" name="password">
+                          </div>
+                          <div class="form-group">
+                              <label>Address</label>
+                              <input type="address" class="form-control" name="address">
+                          </div>
+                          <div class="form-group">
+                              <label>Gender</label>
+                              <select class="form-control" name="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                              </select>
+                          </div>
+                          <div class="form-group">
+                              <label>Grade Level</label>
+                              <select class="form-control" name="grade_level">
+                                  {% for grade_level in grade_levels %}
+                                      <option value="{{ grade_level.id }}">{{ grade_level.grade_level_name }}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                          <div class="form-group">
+                              <label>Section</label>
+                              <input type="text" class="form-control" name="section">
+                          </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Add Student</button>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Account in File</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form role="form" method="POST" action="{% url 'add_student_resource' school_year.id %}" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="card-body">
+                          <div class="form-group">
+                              <label>File</label>
+                              <input type="file" class="form-control" name="file" id="id_file">
+                          </div>
+                      </div>
+                      <!-- /.card-body -->
+                      <div class="card-footer">
+                      <button type="submit" class="btn btn-primary">Upload</button>
+                      </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+      </section>
+
+  {% endblock main_content %}
+
+  {% block custom_js %}
+    {% comment %} Checking if email and username already exists or not usin Ajax {% endcomment %}
+
+    <script>
+        $(document).ready(function(){
+            // keyup event will be triggered when user leaves keyboard
+            $("#id_email").keyup(function(){
+                var email = $(this).val();
+
+                if(email!=""){
+                    $.ajax({
+                        url : '{% url 'check_email_exist' %}',
+                        type : 'POST',
+                        data : {email:email}
+                    })
+                    .done(function(response){
+                        //console.log(response);
+
+                        if(response == "True"){
+                            $(".email_error").remove();
+                            $("<span class='email_error' style='color: red; padding: 5px; font-weight: bold;'> Email Not Available. </span>").insertAfter("#id_email")
+                        }
+                        else{
+                            $(".email_error").remove();
+                            $("<span class='email_error' style='color: green; padding: 5px; font-weight: bold;'> Email Available. </span>").insertAfter("#id_email")
+                        }
+                    })
+
+                    .fail(function(){
+                        console.log("Failed");
+                    })
+                }
+                else{
+                    $(".email_error").remove();
+                }
+
+            })
+
+            $("#id_username").keyup(function(){
+                var username = $(this).val();
+
+                if(username!=""){
+                    $.ajax({
+                        url : '{% url 'check_username_exist' %}',
+                        type : 'POST',
+                        data : {username:username}
+                    })
+                    .done(function(response){
+                        //console.log(response);
+
+                        if(response == "True"){
+                            $(".username_error").remove();
+                            $("<span class='username_error' style='color: red; padding: 5px; font-weight: bold;'> Username Not Available. </span>").insertAfter("#id_username")
+                        }
+                        else{
+                            $(".username_error").remove();
+                            $("<span class='username_error' style='color: green; padding: 5px; font-weight: bold;'> Username Available. </span>").insertAfter("#id_username")
+                        }
+                    })
+
+                    .fail(function(){
+                        console.log("Failed");
+                    })
+                }
+                else{
+                    $(".username_error").remove();
+                }
+
+            })
+        })
+    </script>
+
+{% endblock custom_js %}

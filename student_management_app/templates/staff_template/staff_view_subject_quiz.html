@@ -1,0 +1,103 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+    Update Profile
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+          {% comment %} Display Messages {% endcomment %}
+          {% if messages %}
+          <div class="form-group">
+          <div class="col-12">
+              {% for message in messages %}
+              {% if message.tags == "error" %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% elif message.tags == "success" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% endif %}
+              {% endfor %}
+          </div>
+          </div>
+          {% endif %}
+            <h2 class="mb-3">Quizzes in {{ subject_obj.subject_name }}</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" type="button">+ Add Quiz</button>
+            <div class="card">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th>Quiz</th>
+                    <th>Items</th>
+                    <th>View</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for quiz in quiz %}
+                    <tr>
+                      <td class="align-middle"><a href="{% url 'staff_add_question_to_quiz' subject_obj.id quiz.id %}">{{ quiz.name }}</a></td>
+                      <td class="align-middle">{{ quiz.questions_count }}</td>
+                      <td class="text-right">
+                        <a href="" class="btn btn-primary">View results</a>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td class="bg-light text-center font-italic" colspan="5">You haven't created any quiz yet.</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Quiz</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form role="form" method="POST" action="{% url 'create_quiz_save' subject_obj.id %}">
+                            {% csrf_token %}
+                            <div class="card-body">
+                              <div class="form-group">
+                                  <label>Name</label>
+                                  <input type="text" class="form-control" name="name">
+                              </div>
+                              <div class="form-group">
+                                  <label>Grading</label>
+                                  <select class="form-control" name="grading">
+                                      {% for grading in grading %}
+                                          <option value="{{ grading.id }}">{{ grading.grading_name }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                            </div>
+
+                            <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Add Quiz</button>
+                            </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      </section>
+
+  {% endblock main_content %}

@@ -1,0 +1,92 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    Add Subject
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal">+ Add Subject</button><br/>&nbsp;
+          {% comment %} Display Messages {% endcomment %}
+          {% if messages %}
+          <div class="form-group">
+          <div class="col-12">
+              {% for message in messages %}
+              {% if message.tags == "error" %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% elif message.tags == "success" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% endif %}
+              {% endfor %}
+          </div>
+          </div>
+          {% endif %}
+            <div class="row">
+              {% for subject in subjects %}
+                <div class="col-md-4">
+                  <div class="small-box bg-success">
+                    <div class="inner">
+                      <h4>{{subject.subject_name}}</h4>
+
+                      <p>{{subject.grade_level_id.grade_level_name}}</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="{% url 'view_subject' school_year.id subject.id %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+
+            <!-- /.container-fluid -->
+        <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Subject</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form role="form" method="POST" action="{% url 'add_subject_save' school_year.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Subject Name</label>
+                        <input type="text" class="form-control" name="subject" placeholder="Enter Subject">
+                    </div>
+                    <div class="form-group">
+                        <label>Assigned Year Level</label>
+                        <select class="form-control" name="grade_id">
+                            {% for gradelevel in gradelevel %}
+                                <option value="{{ gradelevel.id }}">{{ gradelevel.grade_level_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+
+  {% endblock main_content %}

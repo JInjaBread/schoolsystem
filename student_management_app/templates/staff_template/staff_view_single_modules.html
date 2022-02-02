@@ -1,0 +1,146 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+     {{ subject_data.subject_name }}
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+  {% if messages %}
+  <div class="form-group">
+  <div class="col-12">
+      {% for message in messages %}
+      {% if message.tags == "error" %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% elif message.tags == "success" %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+  </div>
+  {% endif %}
+  <h3 class="display-9">{{ module_data.name }} {{ module_data.grading_id.grading_name }}</h3>
+  <div class="dropdown">
+    <button class="btn btn-primary btn-lg" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        + Create
+    </button>
+
+    <div class="dropdown-menu"
+         aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" type="button" data-toggle="modal" data-target="#quiz-modal">
+          <i class="fas fa-scroll"></i> Quiz
+      </a>
+        <a class="dropdown-item" type="button" data-toggle="modal" data-target="#task-modal">
+          <i class="fas fa-tasks"></i> Task Performance
+      </a>
+    </div>
+</div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="jumbotron jumbotron-fluid">
+          <h3 class="display-9">Written Works</h3>
+          <table class="table">
+            {% for quiz in quiz_data %}
+              <tr>
+                <td class="lead" style="border: 0px solid #000000;"><a href="{% url 'staff_view_result_of_quiz' quiz.id %}">{{ quiz.name }}</a></td>
+                <td class="lead" style="border: 0px solid #000000;"><a href="{% url 'add_question_to_quiz' quiz.id %}">Edit</a></td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+        <div class="jumbotron jumbotron-fluid">
+          <h3 class="display-9">Task Performance</h3>
+          <table class="table">
+              {% for task in task_data %}
+              <tr>
+                <td class="lead" style="border: 0px solid #000000;"><a href="{% url 'staff_view_submission' task.id %}">{{ task.title }}</a></td>
+              </tr>
+              {% endfor %}
+          </table>
+        </div>
+
+      </div>
+      <div class="col-sm-8">
+        <div class="embed-responsive embed-responsive-1by1">
+          <iframe class="embed-responsive-item" src="{{ module_data.module_file }}" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade  bd-example-modal-xl" id="task-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Task Performance</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form  action="{% url 'staff_add_taskperformance' subject_data.id module_data.id%}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-8">
+                <div class="form-group">
+                 <input type="text" class="form-control" id="title" name="title" placeholder="Title">
+               </div>
+               <div class="form-group">
+                 <textarea class="form-control" id="instruction" name="instruction" rows="3" placeholder="Instructions"></textarea>
+               </div>
+
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                 <p>Points: </p><input type="number" class="form-control" id="max_score" name="max_score" min="1" max="100" value="100">
+               </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="quiz-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Quiz</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'staff_view_add_quiz' subject_data.id module_data.id%}" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="quiz_name">Quiz Name</label>
+            <input type="text" class="form-control" id="quiz_name" name="quiz_name">
+          </div>
+          <div class="form-group">
+            <label for="quiz_name">Deadline</label>
+            <input type="date" class="form-control" id="quiz_name" name="deadline_date">
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+  {% endblock main_content %}

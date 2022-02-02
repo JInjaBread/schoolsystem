@@ -1,0 +1,64 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-8">
+          <div class="card">
+              <div class="card-header">
+                  <h3 class="card-title">{{ quiz_data.name }}</h3>
+
+                  <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                  </div>
+                  </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                  <table class="table table-hover text-nowrap">
+                  <thead>
+                      <tr>
+                        <th>Student Name</th>
+                        <th>Score</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for quiz in taken_quiz %}
+                      <tr>
+                      <td>{{ quiz.student_id.admin.first_name }} {{ quiz.student_id.middle_name }} {{ quiz.student_id.admin.last_name }}</td>
+                      <td>{{ quiz.score }}</td>
+                      </tr>
+                      {% endfor %}
+
+                  </tbody>
+                  </table>
+              </div>
+              <!-- /.card-body -->
+              </div>
+
+        </div>
+      </div>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+                <div class="chart-container">
+                  <canvas id="chart" width="300" height="150"></canvas>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</section>
+
+  {% endblock main_content %}
+
+{% block custom_js %}
+{% endblock custom_js %}

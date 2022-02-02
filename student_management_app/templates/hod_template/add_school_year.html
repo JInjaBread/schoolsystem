@@ -1,0 +1,111 @@
+{% extends 'hod_template/base_template2.html' %}
+
+{% block page_title %}
+    School Year
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">+ Add School Year</button><br/>&nbsp;
+          {% if messages %}
+          <div class="form-group">
+          <div class="col-12">
+              {% for message in messages %}
+              {% if message.tags == "error" %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% elif message.tags == "success" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+              {% endif %}
+              {% endfor %}
+          </div>
+          </div>
+          {% endif %}
+          <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">School Year</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                <th>ID</th>
+                                <th>School Year</th>
+                                <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for school_year in school_years %}
+                                <tr>
+                                <td>{{ school_year.id }}</td>
+                                <td>{{ school_year.school_year_start|date:"Y" }} - {{ school_year.school_year_end|date:"Y" }}</td>
+                                <td><a  class="btn btn-primary" href="{% url 'admin_home' school_year.id %}">View</a></td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add School Year</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form role="form" method="POST" action="{% url 'add_school_year' %}">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label>School Year Start</label>
+                            <input type="date" class="form-control" name="school_year_start">
+                        </div>
+                        <div class="form-group">
+                            <label>School Year End</label>
+                            <input type="date" class="form-control" name="school_year_end">
+                        </div>
+
+                        <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Add School Year</button>
+                        </div>
+
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+
+  {% endblock main_content %}
+  {% block custom_js %}
+
+  {% endblock custom_js %}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>VC || WhiteBoard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="{% static "fontawesome-free/css/all.min.css" %}">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+	<!-- Tempusdominus Bbootstrap 4 -->
+	<link rel="stylesheet" href="{% static 'tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+	<!-- iCheck -->
+	<link rel="stylesheet" href="{% static "icheck-bootstrap/icheck-bootstrap.min.css" %}">
+	<!-- JQVMap -->
+	<link rel="stylesheet" href="{% static "jqvmap/jqvmap.min.css" %}">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css'  %}">
+	<!-- overlayScrollbars -->
+	<link rel="stylesheet" href="{% static "overlayScrollbars/css/OverlayScrollbars.min.css" %}">
+	<!-- Daterange picker -->
+	<link rel="stylesheet" href="{% static "daterangepicker/daterangepicker.css" %}">
+	<!-- summernote -->
+	<link rel="stylesheet" href="{% static "summernote/summernote-bs4.css" %}">
+	<!-- Google Font: Source Sans Pro -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+	<div class="container">
+		<input type="text" hidden="hidden" name="subject" id="subject" value="{{ subject_data.id }}">
+		<input type="text" hidden="hidden" name="section" id="section" value="{{ section_data.id }}">
+		<div class="row">
+            <div class="col-md-12">
+                <div></div>
+								<h3 id="label-username" value="{{ user_data.admin.first_name }} {{ user_data.admin.last_name }}" >{{ user_data.admin.first_name }} {{ user_data.admin.last_name }}</h3>
+								<div>
+									<button id="btn-join" type="button" class="btn btn-primary">Join Room</button>
+								</div>
+            </div>
+  		</div>
+			<div class="row">
+            <div class="col-1 col-md-6 col-xl-8">
+                <div id="screen-container">
+								</div>
+
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div id="video-container">
+									<video id="local-video" class="d-inline-block videoAgenteVichom" autoplay playsinline width="300" height="200">
+	                </video>
+								</div>
+            </div>
+        </div>
+    </div>
+		<div class="container">
+        <div class="row text-center">
+            <div class="col">
+                <div>
+									<button class="btn btn-primary" type="button" style="width: 75px;height: 52px;background: var(--white);border-width: 0px;margin-right: 9px;">
+										<i class="fa fa-phone" style="font-size: 40px;color: var(--gray-dark);"></i>
+									</button>
+									<button  class="btn btn-primary" type="button" style="width: 75px;height: 52px;background: var(--white);border-width: 0px;margin-right: 9px;">
+										<i id="btn-toggle-video" class="fas fa-video" style="font-size: 40px;color: var(--gray-dark);"></i>
+									</button>
+									<button class="btn btn-primary" type="button" style="width: 75px;height: 52px;background: #ffffff;border-width: 0px;margin-right: 9px;">
+										<i id="btn-toggle-audio" class="fa fa-microphone" style="font-size: 40px;background: #ffffff;color: var(--gray-dark);"></i></button></div>
+            </div>
+        </div>
+				<hr>
+				<div class="row text-center">
+					<div class="col">
+						{% if user.user_type == "2" %}
+							<div class="col">
+								<button id="btn-share-screen" class="btn btn-primary"><i class="fas fa-desktop"></i> Share Screen</button>
+								<a href="https://jamboard.google.com/" target ="_blank">	<button class="btn btn-info"><i class="fas fa-chalkboard-teacher"></i> Open Whiteboard</button></a>
+								<button id="btn-record-screen" class="btn btn-secondary"><i class="fas fa-dot-circle"></i> Record Screen</button>
+								<button type="button" class="btn btn-primary" id="fetch_student"><i class="far fa-calendar-alt"></i> Take Attendance</button>
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chatModal"><i class="fas fa-comment-alt"></i> Chat</button>
+							</div>
+						{% elif user.user_type == "3" %}
+							<div class="col">
+								<button id="btn-share-screen" class="btn btn-primary"><i class="fas fa-desktop"></i> Share Screen</button>
+								<a href="https://jamboard.google.com/" target ="_blank">	<button class="btn btn-info"><i class="fas fa-chalkboard-teacher"></i> Open Whiteboard</button></a>
+								<button id="btn-record-screen" class="btn btn-secondary"><i class="fas fa-dot-circle"></i> Record Screen</button>
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chatModal"><i class="fas fa-comment-alt"></i> Chat</button>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="card-footer" id="student_data">
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Chat app  -->
+			<div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Chat App</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true"></span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class='col-lg-2'>
+								<div id="chat">
+									<div id="messages">
+										<ul id="message-list"></ul>
+									</div>
+									<div id="ct"><input id="msg"><button id="btn-send-msg" class="btn btn-primary">send</button></div>
+
+									<button class="view-button" hidden="hidden" id="share-file-button">Share File</button>
+									<div id="select-file-dialog" style="display: none;">
+										<div id="dialog-content">
+										 <div id="select-file">
+											<div id="label">Select a file:</div>
+											<input type="file" id="select-file-input">
+										  </div>
+										  <div id="dialog-footer">
+											<button id="ok-button" disabled>Ok</button>
+											<button id="cancel-button" class="cancel-button">Cancel</button>
+										  </div>
+										</div>
+									  </div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+	    {% block content %}
+	    {% endblock %}
+
+	</div>
+
+	<!-- jQuery -->
+	<script src="{% static "jquery/jquery.min.js"  %}"></script>
+	<!-- jQuery UI 1.11.4 -->
+	<script src="{% static "jquery-ui/jquery-ui.min.js"  %}"></script>
+	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+	<script>
+	  $.widget.bridge('uibutton', $.ui.button)
+	</script>
+	<!-- Bootstrap 4 -->
+	<script src="{% static "bootstrap/js/bootstrap.bundle.min.js"  %}"></script>
+	<!-- ChartJS -->
+	<script src="{% static "chart.js/Chart.min.js"  %}"></script>
+	<!-- Sparkline -->
+	<script src="{% static "sparklines/sparkline.js"  %}"></script>
+	<!-- JQVMap -->
+	<script src="{% static "jqvmap/jquery.vmap.min.js"  %}"></script>
+	<script src="{% static "jqvmap/maps/jquery.vmap.usa.js"  %}"></script>
+	<!-- jQuery Knob Chart -->
+	<script src="{% static "jquery-knob/jquery.knob.min.js"  %}"></script>
+	<!-- daterangepicker -->
+	<script src="{% static "moment/moment.min.js"  %}"></script>
+	<script src="{% static "daterangepicker/daterangepicker.js"  %}"></script>
+	<!-- Tempusdominus Bootstrap 4 -->
+	<script src="{% static "tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"  %}"></script>
+	<!-- Summernote -->
+	<script src="{% static "summernote/summernote-bs4.min.js"  %}"></script>
+	<!-- overlayScrollbars -->
+	<script src="{% static "overlayScrollbars/js/jquery.overlayScrollbars.min.js"  %}"></script>
+	<!-- AdminLTE App -->
+	<script src="{% static 'dist/js/adminlte.js'  %}"></script>
+	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+	<script src="{% static 'dist/js/pages/dashboard.js'  %}"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="{% static 'dist/js/demo.js'  %}"></script>
+	{% block custom_js %}
+	<script>
+			$(document).ready(function(){
+					$("#fetch_student").click(function(){
+
+							// Displaying Students Based on Staff, Course and Session Enrolled
+
+							var subject=$("#subject").val()
+							var section=$("#section").val()
+
+
+							$.ajax({
+									url:'{% url 'get_students' %}',
+									type:'POST',
+									data:{subject:subject, section:section},
+							})
+
+
+							.done(function(response){
+									var json_data=JSON.parse(response);
+									//Displaying Attendance Date Input and Students Attendance
+									var div_data="<div class='form-group'></div>"
+									div_data+="<div class='form-group'><div class='row'>"
+
+									for(key in json_data)
+									{
+											div_data+="<div class='col-lg-5'><div class='form-check'><input type='checkbox' checked='checked' name='student_data[]' value='"+ json_data[key]['id'] +"' />  <label class='form-check-label'>"+ json_data[key]['name']+" </label></div></div> ";
+
+									}
+									div_data+="</div></div>";
+									div_data+="<div class='form-group'>";
+									div_data+="<button id='save_attendance' class='btn btn-success' type='button'>Save Attendance Data</button>";
+									div_data+="</div>";
+									$("#student_data").html(div_data);
+
+							})
+							.fail(function(){
+									alert("Error in Fetching Students.")
+							})
+
+							// Save Attendance Data to Database
+							$(document).on("click", "#save_attendance", function(){
+
+									//Disabling the Button while data is being saved in Server
+									$(this).attr("disabled", "disabled")
+									$(this).text("Saving Attendance Data...")
+
+									//console.log("SAVE")
+									var student_data=$("input[name='student_data[]'").map(function(){
+													if($(this).is(":checked")){
+															return {"id":$(this).val(), "status":1}; // Getting ID and Value of Students
+													}
+													else
+													{
+															return {"id":$(this).val(), "status":0}; // Getting ID and Value of Students
+													}
+											}).get()
+									var currentTime = new Date();
+	  							var day = currentTime.getDate();
+									var subject_id=$("#subject").val();
+									var section_id=$("#section").val();
+									//console.log(attendance_date)
+									//console.log(student_data);
+									student_data = JSON.stringify(student_data)
+
+									// Saving Attendance Data into Database
+
+									$.ajax({
+											url:'{% url 'save_attendance_data' %}',
+											type:'POST',
+											data:{student_ids:student_data, subject_id:subject_id, section_id:section_id},
+									})
+
+
+									.done(function(response){
+
+											if(response=="OK")
+											{
+													alert("Attendance Saved!")
+													$("#student_data").hide();
+											}
+											else
+											{
+													alert("Failed to Save Attendance!")
+											}
+
+											//console.log(response)
+									})
+
+									.fail(function(){
+											alert("Error in Saving Students Attendance Data.")
+									})
+
+							})
+
+					})
+			})
+	</script>
+	{% endblock custom_js %}
+</body>
+</html>

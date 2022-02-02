@@ -1,0 +1,24 @@
+{% extends 'student_template/base_template.html' %}
+
+{% block page_title %}
+    Student Subject
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="embed-responsive embed-responsive-16by9"><iframe src="{{ activities.activities_link }}" width="640" height="828" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe></div>
+  </div>
+</section>
+  {% endblock main_content %}
+
+  {% block custom_js %}
+    <script>
+      $(document).mouseleave(function () {
+        window.close()
+      });
+    </script>
+  {% endblock custom_js %}

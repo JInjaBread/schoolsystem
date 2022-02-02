@@ -1,0 +1,40 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+    Teaching Subject {{ section_list }}
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+<section class="content">
+  <div class="container-fluid">
+  <div class="row">
+      {% for assigned in assigned %}
+      <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-info">
+          <div class="inner">
+              <h3>{{ assigned.subject_id.subject_name }}</h3>
+
+              <p>{{ assigned.subject_id.grade_level_id.grade_level_name }}</p>
+              <p>{{ assigned.section_id.section_name }}</p>
+          </div>
+          <div class="icon">
+              <i class="ion ion-ios-book"></i>
+          </div>
+          <a href="{% url 'staff_view_single_subject' assigned.subject_id.id assigned.section_id.id%}" class="small-box-footer">Customize Subject<i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+      </div>
+
+      {% endfor %}
+
+    </div><!-- /.container-fluid -->
+  </div>
+</section>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

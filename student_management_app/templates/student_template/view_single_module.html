@@ -1,0 +1,71 @@
+{% extends 'student_template/base_template.html' %}
+
+{% block page_title %}
+    Student Subject
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+<section class="content">
+  <h3 class="display-9">{{ module_data.name }} {{ module_data.grading_id.grading_name }}</h3>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-header">
+            Written Works
+          </div>
+            {% if quiz_count == 0 %}
+              <div class="card-body">
+                <table class="table">
+                  <tr>
+                    <td class="lead" style="border: 0px solid #000000;"><p class="card-text" > No Activities </p></td>
+                  </tr>
+                </table>
+                </div>
+              {% else %}
+                  {% for quiz in quiz_list %}
+                    <div class="card-body">
+                      <table class="table">
+                        <tr>
+                          <td class="lead" style="border: 0px solid #000000;"><a href="{% url 'take_quiz' quiz.id %}"><p class="card-text" >{{ quiz.name }}</p></a></td>
+                        </tr>
+                      </table>
+                    </div>
+                  {% endfor %}
+              {% endif %}
+              <a href="{% url 'view_result' subject_data.id module_data.id %}" class="btn btn-primary">View Result</a>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            Task Performance
+          </div>
+        <div class="card-body">
+          <table class="table">
+            {% for task in task_data %}
+              <tr>
+                <td class="lead" style="border: 0px solid #000000;"><a href="{% url 'submit_task' task.id %}"><p class="card-text" >{{ task.title }}</p></a></td>
+              </tr>
+            {% endfor %}
+          </table>
+          </div>
+            <a href="{% url 'view_result' subject_data.id module_data.id %}" class="btn btn-primary">View Result</a>
+        </div>
+
+      </div>
+      <div class="col-sm-8">
+        <div class="embed-responsive embed-responsive-1by1">
+          <iframe class="embed-responsive-item" src="{{ module_data.module_file }}" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  {% endblock main_content %}
+
+  {% block custom_js %}
+    <script>
+
+    </script>
+  {% endblock custom_js %}
