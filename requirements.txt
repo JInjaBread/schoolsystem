@@ -29,7 +29,6 @@ MarkupPy==1.14
 msgpack==1.0.3
 odfpy==1.4.1
 openpyxl==3.0.9
-psycopg2==2.7.7
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.21
